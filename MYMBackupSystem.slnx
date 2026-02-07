@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="BackupServerApi/BackupServerApi.csproj" />
+  <Project Path="BackupShared/BackupShared.csproj" />
+  <Project Path="ClientBackupAgent/ClientBackupAgent.csproj" />
+</Solution>
