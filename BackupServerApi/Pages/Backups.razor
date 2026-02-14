@@ -1,0 +1,55 @@
+@page "/backups"
+@inject HttpClient Http
+
+<h3>Backups</h3>
+
+@if (backups == null)
+{
+    <p>Loading...</p>
+}
+else if (backups.Length == 0)
+{
+    <p>No backups found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Database</th>
+                <th>Timestamp</th>
+                <th>Size (MB)</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var b in backups)
+        {
+            <tr>
+                <td>@b.ClientId</td>
+                <td>@b.DatabaseName</td>
+                <td>@b.Timestamp.ToLocalTime()</td>
+                <td>@(b.FileSizeBytes / 1024 / 1024)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private BackupJobDto[]? backups;
+
+    protected override async Task OnInitializedAsync()
+    {
+        backups = await Http.GetFromJsonAsync<BackupJobDto[]>("/api/backups");
+    }
+
+    public class BackupJobDto
+    {
+        public Guid ClientId { get; set; }
+        public string DatabaseName { get; set; } = default!;
+        public DateTime Timestamp { get; set; }
+        public string FilePath { get; set; } = default!;
+        public long FileSizeBytes { get; set; }
+    }
+}
